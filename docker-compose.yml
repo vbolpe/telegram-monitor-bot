@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  monitor-bot:
+    build: .
+    container_name: red-monitor-bot
+    restart: unless-stopped
+
+    # Variables de entorno desde el archivo .env
+    env_file:
+      - .env
+
+    # Montar el Excel como volumen: editá el archivo local sin reconstruir la imagen
+    volumes:
+      - ./data/red.xlsx:/data/red.xlsx:ro
+
+    # Necesario para que ping3 funcione correctamente
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+    # Red del host para alcanzar IPs internas de la organización
+    network_mode: host
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
