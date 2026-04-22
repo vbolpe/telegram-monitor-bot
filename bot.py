@@ -1,7 +1,7 @@
 import os
 import socket
 import logging
-from datetime import datetime
+from datetime import datetime, time
 
 import pandas as pd
 from ping3 import ping
@@ -189,13 +189,16 @@ def monitorear_red():
 
     # ── Pie del resumen ────────────────────────
     sedes_ok = total_sedes - caidas
-    resumen_lineas.append("─" * 34)
-    resumen_lineas.append(
-        f"✅ Operativas: {sedes_ok}/{total_sedes}  |  🔴 Caídas: {caidas}"
+    resumen_pie= (
+        f"-" * 34 + "\n"
+        f"✅ Operativas: {sedes_ok}/{total_sedes}  |  🔴 Sin Acceso: {caidas}\n"
+        "_Ver mensajes siguientes para detalle_"
     )
-    resumen_lineas.append("_Ver mensajes siguientes para detalle_")
 
-    return "\n".join(resumen_lineas), detalles
+    resumen_lineas.append("-" * 34)
+    resumen_str = "\n".join(resumen_lineas)
+    
+    return resumen_str, detalles, resumen_pie
 
 
 # ─────────────────────────────────────────────
@@ -277,9 +280,12 @@ async def cmd_estado(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def post_init(application: Application):
     application.job_queue.run_once(tarea_monitoreo, when=10, name="monitoreo_inicial")
-    application.job_queue.run_repeating(
-        tarea_monitoreo, interval=43200, first=43200, name="monitoreo_red"
-    )
+    application.job_queue.run_daily(
+        tarea_monitoreo,
+        time(10, 0),  # 10:00 AM
+        days=(0, 1, 2, 3, 4, 5, 6), # Todos los dias
+        name="monitoreo_red"
+        )
     logger.info("Jobs registrados: inicio en 10 s, luego cada 12 hs.")
 
 
