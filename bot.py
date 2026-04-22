@@ -99,7 +99,7 @@ def monitorear_red():
             resumen_lineas.append(f"🔴 {sistema}")
             detalles.append(
                 f"📍 *{sistema}*\n"
-                f"  🔴 *TOTALMENTE CAÍDO*\n"
+                f"  🔴 *Sin Acceso Remoto*\n"
                 f"  Router `{router_ip}` sin respuesta"
             )
             continue
@@ -165,7 +165,7 @@ def monitorear_red():
         if uip_ok is None:
             det.append("  🖥️  UIP: ⚠️ No configurado")
         else:
-            det.append(f"  🖥️  UIP: {'✅' if uip_ok else '❌'} `{uip_ip}:80`")
+            det.append(f"  🖥️  UIP: {'✅' if uip_ok else '❌'} `{uip_ip}`")
 
         if prox_ok is None:
             det.append("  📦 Proxmox: ⚠️ No configurado")
