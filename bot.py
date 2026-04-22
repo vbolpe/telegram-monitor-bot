@@ -104,10 +104,10 @@ def monitorear_red():
             )
             continue
 
-        # ── Servidor UIP (puerto 80) ───────────
+        # ── Servidor UIP ───────────
         uip_ip = str(row.get("SERVIDOR (UIP)", "")).strip()
         if not es_vacio(uip_ip):
-            uip_ok = check_port(uip_ip, 80)
+            uip_ok = check_ping(uip_ip)
         else:
             uip_ok = None
 
